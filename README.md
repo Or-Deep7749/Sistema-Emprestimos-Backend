@@ -1,10 +1,10 @@
-# Sistema de Análise de Empréstmos - API REST
+# Sistema de Empréstimos - Backend
 
-API desenvolvida para cadastro de clientes e análise de empréstimos
+API REST desenvolvida com **Node.js**, **Express** e **MySQL** para gerenciar clientes e analisar a disponibilidade de empréstimos.
 
-# Tecnologias
-
+## 🚀 Tecnologias Utilizadas
 - Node.js
 - Express
-- MySQL
-- dotenv & cors
+- MySQL2
+- Dotenv
+- Nodemon
