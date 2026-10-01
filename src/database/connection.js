@@ -10,17 +10,19 @@ const dbConfig = {
         rejectUnauthorized: false
     }
 };
+
 async function inicializarBanco() {
     const connection = await mysql.createConnection(dbConfig);
     const dbName = process.env.DB_NAME;
-    
     await connection.query(`CREATE DATABASE IF NOT EXISTS \`${dbName}\`;`);
     console.log(`Banco de dados "${dbName}" verificado/criado com sucesso.`);
     await connection.end();
 }
+
 inicializarBanco().catch(err => {
     console.error('Erro ao inicializar o banco de dados:', err);
 });
+
 const poolConfig = {
     ...dbConfig,
     database: process.env.DB_NAME,
@@ -32,9 +34,9 @@ const poolConfig = {
 const pool = mysql.createPool(poolConfig);
 async function inicializarTabela() {
     try {
-        await conn.query(`DROP TABLE IF EXISTS clientes;`);
-        await conn.query(`
-            CREATE TABLE IF NOT EXISTS clientes (
+        await pool.query(`DROP TABLE IF EXISTS clientes;`);
+        await pool.query(`
+            CREATE TABLE clientes (
                 id INT AUTO_INCREMENT PRIMARY KEY,
                 nome VARCHAR(255) NOT NULL,
                 cpf VARCHAR(14) NOT NULL UNIQUE,
@@ -43,8 +45,7 @@ async function inicializarTabela() {
                 estado VARCHAR(2) NOT NULL
             );
         `);
-        conn.release();
-        console.log('Tabela "clientes" verificada/criada com sucesso.');
+        console.log('Tabela "clientes" recriada com sucesso com os campos em português.');
     } catch (err) {
         console.error('Erro ao criar a tabela clientes:', err);
     }
