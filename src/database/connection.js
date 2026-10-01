@@ -1,31 +1,35 @@
 const mysql = require('mysql2/promise');
 require('dotenv').config();
 
+const dbConfig = {
+    host: process.env.DB_HOST,
+    port: process.env.DB_PORT || 3306,
+    user: process.env.DB_USER,
+    password: process.env.DB_PASSWORD,
+    ssl: {
+        rejectUnauthorized: false
+    }
+};
 async function inicializarBanco() {
-    const connection = await mysql.createConnection({
-        host: process.env.DB_HOST,
-        user: process.env.DB_USER,
-        password: process.env.DB_PASSWORD,
-    });
+    const connection = await mysql.createConnection(dbConfig);
     const dbName = process.env.DB_NAME;
+    
     await connection.query(`CREATE DATABASE IF NOT EXISTS \`${dbName}\`;`);
     console.log(`Banco de dados "${dbName}" verificado/criado com sucesso.`);
     await connection.end();
 }
-
 inicializarBanco().catch(err => {
     console.error('Erro ao inicializar o banco de dados:', err);
 });
-const pool = mysql.createPool({
-    host: process.env.DB_HOST,
-    user: process.env.DB_USER,
-    password: process.env.DB_PASSWORD,
+const poolConfig = {
+    ...dbConfig,
     database: process.env.DB_NAME,
     waitForConnections: true,
     connectionLimit: 10,
     queueLimit: 0,
-});
+};
 
+const pool = mysql.createPool(poolConfig);
 async function inicializarTabela() {
     try {
         const conn = await pool.getConnection();
@@ -47,5 +51,4 @@ async function inicializarTabela() {
 }
 
 inicializarTabela();
-
 module.exports = pool;
