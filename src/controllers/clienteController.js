@@ -1,7 +1,7 @@
 const clienteService = require('../services/clienteService')
 
 const clienteController = {
-    async create(req,res){
+    async create(req, res){
         try{
             const {name,cpf,age,income,location} = req.body
             if (!name || !cpf || !age || !income || !location){
@@ -10,6 +10,7 @@ const clienteController = {
             const novoCliente = await clienteService.create(req.body)
             return res.status(201).json(novoCliente)
         } catch (error) {
+            console.error("ERRO NO CREATE:", error);
             if (error.code === 'ER_DUP_ENTRY'){
                 return res.status(409).json({message: 'CPF já cadastrado'})
             }
@@ -21,7 +22,8 @@ const clienteController = {
             const cliente = await clienteService.findAll()
             return res.status(200).json(cliente)
         } catch (error) {
-            return res.status(500).json({message: 'Erro ao buscar clientes'})
+            console.error("ERRO NO GETALL:", error); // <-- Adicionado para ver o erro real!
+            return res.status(500).json({message: 'Erro ao buscar clientes', error: error.message})
         }
     },
     async getById(req,res){
@@ -33,7 +35,8 @@ const clienteController = {
             }
             return res.status(200).json(cliente)
         } catch (error) {
-            return res.status(500).json({message:'Erro ao buscar cliente'})
+            console.error("ERRO NO GETBYID:", error);
+            return res.status(500).json({message:'Erro ao buscar cliente', error: error.message})
         }
     },
     async update(req,res){
@@ -45,7 +48,8 @@ const clienteController = {
             }
             return res.status(200).json({message:'Cliente atualizado com sucesso'})
         } catch (error) {
-            return res.status(500).json({message:'Erro ao atualizar cliente'})
+            console.error("ERRO NO UPDATE:", error);
+            return res.status(500).json({message:'Erro ao atualizar cliente', error: error.message})
         }
     },
     async delete(req,res){
@@ -57,7 +61,8 @@ const clienteController = {
             }
             return res.status(200).json({message:'Cliente deletado com sucesso'})
         } catch (error) {
-            return res.status(500).json({message:'Erro ao excluir cliente'})
+            console.error("ERRO NO DELETE:", error);
+            return res.status(500).json({message:'Erro ao excluir cliente', error: error.message})
         }
     },
     async analyzeLoans(req,res){
@@ -69,7 +74,8 @@ const clienteController = {
             const resultado = await clienteService.analyzeLoans(req.body)
             return res.status(200).json(resultado)
         } catch (error) {
-            return res.status(500).json({message:'Erro ao analisar empréstimos'})
+            console.error("ERRO NO ANALYZELOANS:", error);
+            return res.status(500).json({message:'Erro ao analisar empréstimos', error: error.message})
         }
     }
 }
