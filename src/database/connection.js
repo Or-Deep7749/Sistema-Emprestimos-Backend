@@ -32,15 +32,15 @@ const poolConfig = {
 const pool = mysql.createPool(poolConfig);
 async function inicializarTabela() {
     try {
-        const conn = await pool.getConnection();
+        await conn.query(`DROP TABLE IF EXISTS clientes;`);
         await conn.query(`
             CREATE TABLE IF NOT EXISTS clientes (
                 id INT AUTO_INCREMENT PRIMARY KEY,
-                name VARCHAR(255) NOT NULL,
+                nome VARCHAR(255) NOT NULL,
                 cpf VARCHAR(14) NOT NULL UNIQUE,
-                age INT NOT NULL,
-                income DECIMAL(10, 2) NOT NULL,
-                location VARCHAR(2) NOT NULL
+                idade INT NOT NULL,
+                renda DECIMAL(10, 2) NOT NULL,
+                estado VARCHAR(2) NOT NULL
             );
         `);
         conn.release();
